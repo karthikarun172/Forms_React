@@ -3,27 +3,27 @@ import './App.css';
 import { useState } from 'react';
 
 function App() {
-  const [Email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [checked, setChecked] = useState(false)
-  const [calender, setCalender] = useState("")
-  const [selected, setSelected] = useState("")
-  const [range, setRange] = useState(0)
 
+  const initialValue = { email: "", password: "", rememberMe: false, selected: "None", range: 0 }
+  const [formValues, setFormValues] = useState(initialValue)
 
-  const data = {
-    email_Data: Email,
-    Password_Data: password,
-    Checked_Data: checked,
-    Calender_Data: calender,
-    selected_Data: selected,
-    Range_Data: range
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
   }
+
+
+
+  const converttoDefEventPara = (name, value) => ({
+    target: {
+      name, value
+    }
+  })
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(data)
+    console.log(formValues)
 
   }
 
@@ -35,24 +35,23 @@ function App() {
         className='FormContainer'
         onSubmit={handleSubmit} >
         <h2>Login Form</h2>
-        <input placeholder='Email' onChange={e => setEmail(e.target.value)} value={Email} />
-        <input placeholder='Password' type="password" onChange={e => setPassword(e.target.value)} value={password} />
-        <input type="month" onChange={e => setCalender(e.target.value)} />
-        <input type="range" onChange={e => setRange(e.target.value)} min="0" max="100" />
+        <input placeholder='Email' onChange={handleChange} value={formValues.email} name="email" />
+        <input placeholder='Password' type="password" onChange={handleChange} value={formValues.password} name="password" />
+        <input type="range" min="0" max="100" onChange={handleChange} value={formValues.range} name="range" />
+        <input type="checkbox" onChange={e => handleChange(converttoDefEventPara(e.target.name, e.target.checked))} name="rememberMe" checked={formValues.rememberMe} ></input>
 
-
-        <select value={selected} onChange={e => setSelected(e.target.value)}>
-          <option value="None">None</option>
+        <select value={formValues.selected} name="selected" onChange={handleChange}>
+          <option value={formValues.selected}>None</option>
           <option value="grapefruit">Grapefruit</option>
           <option value="lime">Lime</option>
           <option value="coconut">Coconut</option>
           <option value="mango">Mango</option>
         </select>
-        <input type="checkbox" onChange={(e) => setChecked(!checked)} />
+
 
         <button type='submit' >login</button>
       </form>
-    </div>
+    </div >
   );
 }
 
