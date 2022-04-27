@@ -8,8 +8,17 @@ function App() {
   const initialValue = { email: "", password: "", rememberMe: false, selected: "None", range: 0 }
 
 
-  const { formValues, setFormValues, handleChange, } = useForm(initialValue)
 
+  const { formValues, setFormValues, handleChange, errors, setErrors } = useForm(initialValue)
+
+  const validate = () => {
+    let temp = {}
+    temp.email = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(formValues.email) ? "" : "this field is required"
+    temp.password = formValues.password ? "" : "password required"
+    temp.range = formValues.range > 20 ? "" : "range should be greater than 20"
+    setErrors({ ...temp })
+    return Object.values(temp).every(x => x == "")
+  }
 
 
 
@@ -23,7 +32,9 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formValues)
+    if (validate()) {
+      console.log(formValues)
+    }
 
   }
 
@@ -36,8 +47,11 @@ function App() {
         onSubmit={handleSubmit} >
         <h2>Login Form</h2>
         <input placeholder='Email' onChange={handleChange} value={formValues.email} name="email" />
+        {errors ? <p>{errors.email}</p> : null}
         <input placeholder='Password' type="password" onChange={handleChange} value={formValues.password} name="password" />
+        {errors ? <p>{errors.password}</p> : null}
         <input type="range" min="0" max="100" onChange={handleChange} value={formValues.range} name="range" />
+        {errors ? <p>{errors.range}</p> : null}
         <input type="checkbox" onChange={e => handleChange(converttoDefEventPara(e.target.name, e.target.checked))} name="rememberMe" checked={formValues.rememberMe} ></input>
 
         <select value={formValues.selected} name="selected" onChange={handleChange}>
