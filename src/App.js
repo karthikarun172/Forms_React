@@ -1,16 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
+import useForm from './CustomHooks/useForm';
 
 function App() {
 
   const initialValue = { email: "", password: "", rememberMe: false, selected: "None", range: 0 }
-  const [formValues, setFormValues] = useState(initialValue)
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  }
+
+  const { formValues, setFormValues, handleChange, } = useForm(initialValue)
+
+
 
 
 
@@ -41,7 +41,6 @@ function App() {
         <input type="checkbox" onChange={e => handleChange(converttoDefEventPara(e.target.name, e.target.checked))} name="rememberMe" checked={formValues.rememberMe} ></input>
 
         <select value={formValues.selected} name="selected" onChange={handleChange}>
-          <option value={formValues.selected}>None</option>
           <option value="grapefruit">Grapefruit</option>
           <option value="lime">Lime</option>
           <option value="coconut">Coconut</option>
