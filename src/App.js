@@ -9,18 +9,23 @@ function App() {
 
 
 
-  const { formValues, setFormValues, handleChange, errors, setErrors } = useForm(initialValue)
 
-  const validate = () => {
-    let temp = {}
-    temp.email = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(formValues.email) ? "" : "this field is required"
-    temp.password = formValues.password ? "" : "password required"
-    temp.range = formValues.range > 20 ? "" : "range should be greater than 20"
+  const validate = (fieldValues = formValues) => {
+    let temp = { ...errors }
+    if ("email" in fieldValues)
+      temp.email = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(fieldValues.email) ? "" : "this field is required"
+    if ("password" in fieldValues)
+      temp.password = fieldValues.password ? "" : "password required"
+    if ("range" in fieldValues)
+      temp.range = fieldValues.range > 20 ? "" : "range should be greater than 20"
     setErrors({ ...temp })
-    return Object.values(temp).every(x => x == "")
+
+    if (fieldValues == formValues)
+      return Object.values(temp).every(x => x == "")
   }
 
 
+  const { formValues, setFormValues, handleChange, errors, setErrors } = useForm(initialValue, true, validate)
 
 
   const converttoDefEventPara = (name, value) => ({

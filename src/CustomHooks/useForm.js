@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function useForm(initialValue) {
+function useForm(initialValue, validateOnChange = false, validate) {
     const [formValues, setFormValues] = useState(initialValue)
     const [errors, setErrors] = useState({})
 
@@ -10,7 +10,12 @@ function useForm(initialValue) {
         setFormValues({
             ...formValues, [name]: value
         })
+        if (validateOnChange) {
+            validate({ [name]: value })
+        }
     }
+
+
 
     return {
         formValues,
